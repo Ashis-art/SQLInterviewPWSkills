@@ -1,0 +1,9 @@
+WITH MedianSalary AS(
+  SELECT
+    Company,
+    Salary,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY Salary) OVER (PARTITION BY Company) AS MedianSalary
+  FROM Employee
+)
+
+SELECT DISTINCT Company,MedianSalaryFROM MedianSalary;
