@@ -1,0 +1,14 @@
+WITH SalaryRanked AS (
+  SELECT
+    EmpId,
+    Salary,
+    EXTRACT(MONTH FROM date) AS month,
+    ROW_NUMBER() OVER (PARTITION BY EmpId ORDER BY date DESC) AS row_num
+    FROM Employee
+)
+SELECT
+  s.EmpId,
+  s.month,
+  SUM(salary) OVER (PARTITION BY s.EmpId ORDER BY s.month DESC ROWS BETWEEN 2 PRECEDING AND 1 PRECEDING) AS cu_sum
+FROM Salary s
+WHERE s.row_num <= 3;
